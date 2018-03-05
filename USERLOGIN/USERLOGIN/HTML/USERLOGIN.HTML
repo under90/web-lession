@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+		"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="Content-Style-type" content="text/css" />
+		<meta http-equiv="Content-Script-type" content="text/javascript" />
+		<title>ユーザーログイン</title>
+		<script>
+			// ---------------------------------------------------
+			//  postURL
+			// 	指定したurlにpostして遷移する。
+			//  		url:    遷移先のurl
+			//  		formId: 対象とするform要素のId
+			// ---------------------------------------------------
+			function postURL(url, formId){
+			        var form = document.getElementById(formId);
+			        form.method = "POST";
+			        form.action = url;
+			        form.submit();
+			}
+		</script>
+		<style>
+			h1 {
+				width: 348px;
+				padding: 4px;
+				font-size: 22px;
+				background-color: palegoldenrod;
+			}
+			#LOGIN_FORM {
+				width: 336px;
+				padding: 10px;
+				background-color: olive;
+			}
+			.area {
+				margin: 0 5px;
+			}
+			dt {
+				width: 110px;
+				margin-bottom:4px;
+				float: left;
+				clear: both;
+				color: white;
+				font-weight: bold;
+			}
+
+			dd {
+				margin-left: 114px;
+				margin-bottom:4px;
+			}
+
+			dd input {
+				width: 200px;
+			}
+
+			button {
+				width: 120px;
+				background-color: yellowgreen;
+			}
+
+		</style>
+	</head>
+	<body>
+		<h1>ユーザーログイン</h1>
+		<form name="LOGIN_FORM" id="LOGIN_FORM">
+			<div class="area">
+				<dl>
+					<dt>USERID</dt>
+					<dd><input type="text" name="USERID" id="USERID" /></dd>
+
+					<dt>PASSWORD</dt>
+					<dd><input type="password" name="PASSWORD" id="PASSWORD" /></dd>
+				</dl>
+			</div>
+			<div class="area" style="text-align:right">
+				<button type="button" name="SUBMIT" id="SUBMIT" 
+				  onclick="postURL('../CGI/USERLOGIN_CHECK.CGI', 'LOGIN_FORM')">ログイン</button>
+			</div>
+		</form>
+	</body>
+</html>

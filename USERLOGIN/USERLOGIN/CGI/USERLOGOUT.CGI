@@ -1,0 +1,90 @@
+#!/bin/bash -vx
+#
+# USERLOGOUT.CGI ログアウト処理
+#
+# written by AOI Daichi (d-aoi@usp-lab.com) 2017/3/7
+
+LANG=ja_JP.UTF-8
+PATH=/home/UTL:/home/TOOL:$PATH
+
+homd=/home/aoi/WEB
+logd=$homd/LOG
+apld=$homd/USERLOGIN
+htmd=$apld/HTML
+
+sesd=$apld/SESSION	# 開発用のディレクトリ配置
+lv3d=$apld/DATA/LV3	# 開発用のディレクトリ配置
+
+tmp=/tmp/tmp_$$
+
+todayhms=$(date +%Y%m%d%H%M%S)
+
+exec 2> $logd/LOG.$(basename $0).$(date +%Y%m%d)
+
+##############################################
+# エラーハンドラ
+ERROR_CHECK(){
+	[ $(plus ${PIPESTATUS[@]}) -eq 0 ] && return
+
+	echo "Content-type: text/plain"
+	echo ""
+	echo システムエラー
+
+	exit 1
+}
+
+##############################################
+# Cookieの確認
+# クッキーの有無とセッションの確認だけを行っている
+
+echo "$HTTP_COOKIE" | tr ";" "\n" | sed -n 's/=/ /p' | self 1/NF > $tmp-cookie
+session=$(nameread SESSION $tmp-cookie)
+loginid=$(tail -n 1 "$sesd/$session" | self 5)
+
+if [ ! -s $tmp-cookie ] ; then
+  # クッキーなし
+  echo "Location: ../CGI/USERLOGIN.CGI"
+  echo
+  false ; ERROR_CHECK
+elif [ -z "$session" ] ; then
+  # セッションなし
+  echo "Location: ../CGI/USERLOGIN.CGI"
+  echo
+  false ; ERROR_CHECK
+elif [ ! -e "$sesd/$session" ] ; then
+  # セッション無効
+  echo "Location: ../CGI/USERLOGIN.CGI"
+  echo
+  false ; ERROR_CHECK
+elif [ $loginid == "_" ]; then
+  # 非ログイン
+  echo "Location: ../CGI/USERLOGIN.CGI"
+  echo
+  false; ERROR_CHECK
+fi
+
+##############################################
+# ログアウト＝セッション情報変更（ユーザID削除）
+
+echo $session $todayhms $HOSTNAME $(basename $0) _ _ >> $sesd/$session
+# 1:セッションキー 2:年月日時分秒 3:サーバ名 4:CGI名 5:ユーザーID 6:モード
+ERROR_CHECK
+
+##############################################
+# HTML作成
+
+cat $htmd/USERLOGOUT.HTML	|
+cat				> $tmp-html
+ERROR_CHECK
+
+##############################################
+# 出力
+echo "Content-type: text/html"
+echo ""
+cat $tmp-html
+ERROR_CHECK
+
+##############################################
+# 終了処理
+rm -f $tmp-*
+exit 0

@@ -1,0 +1,21 @@
+[サンプルのディレクトリ・ファイル構成]
+
+|-- LOG/
+|-- USERLOGIN/
+    |-- CGI/
+    |   |-- USERLOGIN.CGI           ユーザーログイン画面CGI（起点）
+    |   |-- USERLOGIN_CHECK.CGI     ユーザーログイン確認CGI
+    |   |-- USERLOGOUT.CGI          ユーザーログアウトCGI
+    |   |-- CONTENTS.CGI            コンテンツ表示CGI
+    |                               （ログインしないとみられない内容を表示する）
+    |-- HTML/
+    |   |-- USERLOGIN.HTML          ログイン画面
+    |   |-- USERLOGIN_CHECK_OK.HTML ログイン成功画面
+    |   |-- USERLOGOUT.HTML         ログアウト画面
+    |   |-- CONTENTS.HTML           コンテンツ画面
+    |
+※以下の２ディレクトリは、本来ユーザディレクトリ下に置くもの
+ （開発中は仮にアプリケーションディレクトリ内に置いている） 
+    |-- SESSION/    セッションデータ保存用ディレクトリ
+    |-- DATA/LV3/
+        |-- USER    ユーザーマスター
